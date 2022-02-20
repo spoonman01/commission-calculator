@@ -23,10 +23,6 @@ public class CurrencyRateService {
         this.restTemplate = restTemplate;
     }
 
-    public BigDecimal adjustAmountToEur(BigDecimal amount, String currency) {
-        return amount.multiply(getCurrencyRateToEur(currency));
-    }
-
     @Cacheable(value = "currencyRates")
     public BigDecimal getCurrencyRateToEur(String currency) {
         LOG.info("Fetching currency rates");
