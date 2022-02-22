@@ -35,7 +35,9 @@ public class CommissionController {
 
         transaction = transactionService.handleTransaction(transaction);
 
-        return new ResponseEntity<>(new CommissionResponse(transaction.getCommissionAmount(), transaction.getCommissionCurrency()),
+        LOG.info("Transaction handled correctly {}", transaction);
+        return new ResponseEntity<>(new CommissionResponse(transaction.getCommissionAmount(),
+                                                           transaction.getCommissionCurrency()),
                                     HttpStatus.OK);
     }
 }

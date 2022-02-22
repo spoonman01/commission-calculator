@@ -1,36 +1,29 @@
-global org.lrospocher.commissioncalculator.model.Transaction;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import org.lrospocher.commissioncalculator.service.CommissionRulesService.ClientTransactionAmount;
+import org.lrospocher.commissioncalculator.model.Transaction;
+
+global org.lrospocher.commissioncalculator.service.CommissionRulesService.Result result;
 
 dialect "mvel"
 
-rule "Age based discount"
+rule "Default pricing"
     when
-        OrderRequest(age < 20 || age > 50)
+        $transaction : Transaction(amount.compareTo(BigDecimal.ZERO) > 0)
     then
-        System.out.println("==========Adding 10% discount for Kids/ senior customer=============");
-        orderDiscount.setDiscount(orderDiscount.getDiscount() + 10);
+        result.setMinCommission($transaction.getAmount().multiply(BigDecimal.valueOf(0.005)).max(BigDecimal.valueOf(0.05)));
 end
 
-rule "Customer type based discount - Loyal customer"
+rule "Client with a discount"
     when
-        OrderRequest(customerType.getValue == "LOYAL")
+        $transaction : Transaction(clientId == 42)
     then
-        System.out.println("==========Adding 5% discount for LOYAL customer=============");
-        orderDiscount.setDiscount(orderDiscount.getDiscount() + 5);
+        result.setMinCommission(BigDecimal.valueOf(0.05));
 end
 
-rule "Customer type based discount - others"
+rule "High turnover discount"
     when
-        OrderRequest(customerType.getValue != "LOYAL")
+        ClientTransactionAmount(amount.compareTo(BigDecimal.valueOf(1000)) >= 0)
     then
-        System.out.println("==========Adding 3% discount for NEW or DISSATISFIED customer=============");
-        orderDiscount.setDiscount(orderDiscount.getDiscount() + 3);
-end
-
-rule "Amount based discount"
-    when
-        OrderRequest(amount > 1000L)
-    then
-        System.out.println("==========Adding 5% discount for amount more than 1000$=============");
-        orderDiscount.setDiscount(orderDiscount.getDiscount() + 5);
+        result.setMinCommission(BigDecimal.valueOf(0.03));
 end

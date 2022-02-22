@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class ConfigurationWebAndRules {
 
-    private static final String RULES_CUSTOMER_RULES_DRL = "rules/transaction-commission.drl";
+    public static final String RULES_CUSTOMER_RULES_DRL = "rules/transaction-commission.drl";
     private static final KieServices kieServices = KieServices.Factory.get();
 
     @Bean
@@ -40,6 +40,7 @@ public class ConfigurationWebAndRules {
 
     @Bean
     public KieContainer kieContainer() {
+        // Drools rule engine configuration
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         kieFileSystem.write(ResourceFactory.newClassPathResource(RULES_CUSTOMER_RULES_DRL));
         KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);

@@ -12,6 +12,11 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Fetches the currency rates via a public Rest API.
+ *
+ * <p>API fetches data that changes daily, but the method is cached to avoid making the same requests over and over</p>
+ */
 @Service
 public class CurrencyRateService {
 
@@ -25,7 +30,7 @@ public class CurrencyRateService {
 
     @Cacheable(value = "currencyRates")
     public BigDecimal getCurrencyRateToEur(String currency) {
-        LOG.info("Fetching currency rates");
+        LOG.info("Fetching currency rates from API");
         final String strUrl = String.format("https://api.exchangerate.host/%s", LocalDate.now().toString());
         try {
             CurrencyRateResponse currencyRateResponse = restTemplate.getForObject(strUrl, CurrencyRateResponse.class);

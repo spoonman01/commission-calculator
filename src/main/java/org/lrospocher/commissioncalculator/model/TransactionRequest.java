@@ -13,11 +13,11 @@ public class TransactionRequest {
 
     @NotNull
     private LocalDate date;
-    @Min(0L)
+    @NotNull @Min(0L)
     private BigDecimal amount;
     @NotBlank
     private String currency;
-    @Min(1L)
+    @NotNull @Min(1L)
     private Long clientId;
 
     @JsonCreator

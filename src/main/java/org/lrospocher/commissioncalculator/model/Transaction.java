@@ -13,6 +13,8 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(nullable = false)
     private Long clientId;
     @Column(nullable = false)
     private LocalDate date;
@@ -33,6 +35,13 @@ public class Transaction {
         this.date = request.getDate();
         this.amount = request.getAmount();
         this.currency = request.getCurrency();
+    }
+
+    public Transaction(Long clientId, LocalDate date, BigDecimal amount, String currency) {
+        this.clientId = clientId;
+        this.date = date;
+        this.amount = amount;
+        this.currency = currency;
     }
 
     public LocalDate getDate() {
